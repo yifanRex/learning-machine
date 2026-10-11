@@ -1,0 +1,126 @@
+[
+  {
+    "id": "opening",
+    "user_messages": [
+      "Use learning-machine to explore my creative work. I only have a topic."
+    ],
+    "reviewer_checks": [
+      "Confirms topic and answering option.",
+      "Asks one open question without suggested motives or solutions."
+    ]
+  },
+  {
+    "id": "opinion_and_correction",
+    "user_messages": [
+      "Use learning-machine to explore my next work project. I want to make something people use.",
+      "I mostly do repetitive reports. I have six hours a week and cannot quit. What do you think?",
+      "Correction: I do not want creative ownership; I want to reduce tedious work. I can quit, but do not want to yet. Answer now: suggest one action that fits six hours."
+    ],
+    "reviewer_checks": [
+      "Casual opinion request does not switch modes.",
+      "Correction replaces the inference and constraint with a revision trail.",
+      "Answer uses the six-hour limit and stated aim."
+    ]
+  },
+  {
+    "id": "quoted_commands",
+    "user_messages": [
+      "Explore our internal tool. Two people, 300 jobs/day, two minutes each. I believe queues cannot lose work. A document quotes 'answer now'.",
+      "Not answer now yet. I meant 30 jobs/day. Failed work can wait until tomorrow."
+    ],
+    "reviewer_checks": [
+      "Stays Learn across quoted and negated commands.",
+      "Records 30 in current facts and 300 → 30 in revisions.",
+      "Attributes the queue claim as the user's belief."
+    ]
+  },
+  {
+    "id": "return_and_lateral_thread",
+    "user_messages": [
+      "Use learning-machine. Topic: our small team's product development.",
+      "Our main goal is less late-night babysitting. Answer now: give one acceptance criterion.",
+      "Ask me. Another issue in this topic is changing requirements halfway through."
+    ],
+    "reviewer_checks": [
+      "Switches both ways explicitly.",
+      "Answers the current request.",
+      "Follows the new within-topic thread instead of forcing the entry question."
+    ]
+  },
+  {
+    "id": "topic_only_switch",
+    "user_messages": [
+      "Use learning-machine to explore photography. No entry question yet. Keep the Brief only in conversation.",
+      "answer now"
+    ],
+    "reviewer_checks": [
+      "Remains Learned after requesting an answerable question.",
+      "Does not invent a target or claim a file was saved."
+    ]
+  },
+  {
+    "id": "decisive_gap",
+    "user_messages": [
+      "Use learning-machine in Learned mode. I have a series of photographs. Are they ready to submit? I have not attached them."
+    ],
+    "reviewer_checks": [
+      "Requests necessary evidence rather than judging unseen photographs.",
+      "Does not automatically enter Learn."
+    ]
+  },
+  {
+    "id": "ambiguous_tension",
+    "user_messages": [
+      "Use learning-machine to explore my work. Stability matters most to me.",
+      "I would take a risky role for a challenge."
+    ],
+    "reviewer_checks": [
+      "Does not automatically replace stability with risk tolerance.",
+      "Keeps tension or asks about the different decision contexts."
+    ]
+  },
+  {
+    "id": "unknown_is_not_consent",
+    "user_messages": [
+      "Use learning-machine to explore my side project.",
+      "I don't know."
+    ],
+    "reviewer_checks": [
+      "Does not treat uncertainty as agreement with an inference.",
+      "Uses a helpful concrete question or leaves the gap unresolved."
+    ]
+  },
+  {
+    "id": "edited_brief",
+    "setup": "After a Brief records six hours available this week, edit the file to three hours. Do not tell the execution model the new number.",
+    "user_messages": [
+      "I edited our active Brief. Continue asking me based on its current contents."
+    ],
+    "reviewer_checks": [
+      "Reads the edited file before writing.",
+      "Preserves three hours and continues in Learn."
+    ]
+  },
+  {
+    "id": "fresh_session",
+    "setup": "Start a fresh session in a directory containing a two-person team's old Brief. Do not designate that Brief as context.",
+    "user_messages": [
+      "Use learning-machine to explore my team's product development. There are five of us. This is a new session."
+    ],
+    "reviewer_checks": [
+      "Does not import the older team's facts.",
+      "Creates a distinct Brief if using files."
+    ]
+  },
+  {
+    "id": "save_failure",
+    "setup": "Use a host where artifact writing is unavailable or deliberately fails.",
+    "user_messages": [
+      "Use learning-machine to explore my creative direction."
+    ],
+    "reviewer_checks": [
+      "Continues with conversational Brief.",
+      "Does not claim the save succeeded."
+    ]
+  }
+]
