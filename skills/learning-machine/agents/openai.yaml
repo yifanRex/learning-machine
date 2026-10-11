@@ -1,0 +1,4 @@
+interface:
+  display_name: "Learning Machine"
+  short_description: "Explore a topic through questions, then answer with context"
+  default_prompt: "Use $learning-machine to explore a topic with me, one thoughtful question at a time."
