@@ -1,0 +1,10 @@
+{
+  "name": "learning-machine-workbench",
+  "version": "0.1.0",
+  "description": "Web Workbench for Learning Machine: Split-screen dialogue & live structured Session Brief",
+  "type": "module",
+  "scripts": {
+    "start": "node server/index.mjs",
+    "dev": "node --watch server/index.mjs"
+  }
+}

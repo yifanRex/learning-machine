@@ -53,7 +53,7 @@ def check(root=ROOT):
         if not case["user_messages"] or not case["reviewer_checks"]:
             raise ValueError(f"Incomplete evaluation case: {case['id']}")
     for markdown in root.rglob("*.md"):
-        if ".git" in markdown.parts or "dist" in markdown.parts:
+        if ".git" in markdown.parts or "dist" in markdown.parts or ".learning-machine" in markdown.parts:
             continue
         contents = markdown.read_text(encoding="utf-8")
         for target in re.findall(r"!?\[[^\]]*\]\(([^\s)]+)\)", contents):

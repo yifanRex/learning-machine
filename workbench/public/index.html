@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Learning Machine</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <!-- Top Editorial Bar -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <div class="brand">
+          <span class="sup-mark" aria-hidden="true">
+            <span class="sup-sq"></span>
+            <span class="sup-bar"></span>
+          </span>
+          <span class="brand-name">Learning Machine</span>
+        </div>
+        <span class="topbar-sep" aria-hidden="true"></span>
+        <button id="btnNewSession" class="nav-btn" type="button">
+          <svg class="icon-svg" viewBox="0 0 16 16" aria-hidden="true">
+            <path d="M8 3v10M3 8h10" />
+          </svg>
+          <span data-i18n="newTopic">新话题</span>
+        </button>
+        <button id="btnHistory" class="nav-btn" type="button">
+          <span data-i18n="archive">归档</span>
+          <span id="sessionCountBadge" class="mono-count">0</span>
+        </button>
+      </div>
+
+      <!-- Center Suprematist Mode Switcher -->
+      <div class="topbar-center">
+        <div class="mode-switcher" id="modeSwitcher" role="group" aria-label="Mode Switch">
+          <button
+            type="button"
+            id="btnModeLearn"
+            class="mode-btn active-learn"
+            data-mode="learn"
+          >
+            <span class="geo-prim geo-square" aria-hidden="true"></span>
+            <span class="mode-label">LEARN</span>
+          </button>
+          <button
+            type="button"
+            id="btnModeLearned"
+            class="mode-btn"
+            data-mode="learned"
+          >
+            <span class="geo-prim geo-circle" aria-hidden="true"></span>
+            <span class="mode-label">LEARNED</span>
+            <span id="readyHintBadge" class="ready-badge hidden" data-i18n="readyBadge">READY</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Right Global Controls -->
+      <div class="topbar-right">
+        <button id="btnMarkdownModal" class="nav-btn" type="button">
+          <span class="mono-label">MD</span>
+        </button>
+        <button id="btnSettingsModal" class="nav-btn" type="button">
+          <span data-i18n="enginePrefix">引擎</span>
+          <strong id="currentProviderLabel" class="mono-label">Devin CLI</strong>
+        </button>
+        <span class="topbar-sep" aria-hidden="true"></span>
+        <button id="btnLangToggle" class="ctrl-toggle" type="button" title="Switch Language (ZH / EN)">
+          <span id="langLabelZh" class="lang-opt active">ZH</span>
+          <span class="lang-slash">/</span>
+          <span id="langLabelEn" class="lang-opt">EN</span>
+        </button>
+        <button id="btnThemeToggle" class="ctrl-toggle theme-toggle" type="button" title="Toggle Light / Dark Canvas">
+          <span class="sup-theme-icon" aria-hidden="true"></span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Split Workspace -->
+    <main class="workspace">
+      <!-- Left Column: Editorial Dialogue Canvas -->
+      <section class="chat-panel">
+        <!-- Empty / Start Session View -->
+        <div id="startSessionView" class="start-session-view">
+          <div class="start-editorial">
+            <div class="start-header">
+              <div class="sup-composition" aria-hidden="true">
+                <span class="comp-rect"></span>
+                <span class="comp-circle"></span>
+                <span class="comp-line"></span>
+              </div>
+              <h1 class="start-title-triad" aria-label="New Topic, Thought, Mind">
+                <span class="triad-word">New Topic</span>
+                <span class="triad-sep" aria-hidden="true">/</span>
+                <span class="triad-word">Thought</span>
+                <span class="triad-sep" aria-hidden="true">/</span>
+                <span class="triad-word">Mind</span>
+              </h1>
+              <p class="start-kicker" data-i18n="startKicker">新主题 · 思绪 · 心智</p>
+            </div>
+
+            <form id="startSessionForm" class="start-form">
+              <div class="field-block">
+                <label for="inputTopic">
+                  <span data-i18n="topicLabel">主题 / TOPIC</span>
+                  <span class="req-mark">REQUIRED</span>
+                </label>
+                <input
+                  id="inputTopic"
+                  type="text"
+                  required
+                  data-i18n-placeholder="topicPlaceholder"
+                  placeholder="例如：个人投资配置 / 消息队列架构选型 / 独立产品冷启动"
+                  autocomplete="off"
+                />
+              </div>
+
+              <div class="field-block">
+                <label for="inputEntryQuestion">
+                  <span data-i18n="entryQuestionLabel">初始问题 / QUESTION</span>
+                  <span class="opt-mark" data-i18n="optionalMark">OPTIONAL</span>
+                </label>
+                <textarea
+                  id="inputEntryQuestion"
+                  rows="2"
+                  data-i18n-placeholder="entryPlaceholder"
+                  placeholder="从一个问题开始这段旅途，或留白直接出发…"
+                ></textarea>
+              </div>
+
+              <div class="preset-section">
+                <span class="preset-label" data-i18n="presetHeading">常见主题 / TOPICS</span>
+                <div class="preset-chips">
+                  <button
+                    type="button"
+                    class="specimen-btn"
+                    data-topic="个人资产配置"
+                    data-question=""
+                  >
+                    <span class="spec-idx">01</span>
+                    <span data-i18n="preset1">个人资产配置</span>
+                  </button>
+                  <button
+                    type="button"
+                    class="specimen-btn"
+                    data-topic="系统架构设计"
+                    data-question=""
+                  >
+                    <span class="spec-idx">02</span>
+                    <span data-i18n="preset2">系统架构设计</span>
+                  </button>
+                  <button
+                    type="button"
+                    class="specimen-btn"
+                    data-topic="产品方向与策略"
+                    data-question=""
+                  >
+                    <span class="spec-idx">03</span>
+                    <span data-i18n="preset3">产品方向与策略</span>
+                  </button>
+                  <button
+                    type="button"
+                    class="specimen-btn"
+                    data-topic="研究课题梳理"
+                    data-question=""
+                  >
+                    <span class="spec-idx">04</span>
+                    <span data-i18n="preset4">研究课题梳理</span>
+                  </button>
+                </div>
+              </div>
+
+              <button type="submit" id="btnStartSubmit" class="btn-suprematist">
+                <span data-i18n="startBtn">开始 / START</span>
+                <svg class="icon-svg" viewBox="0 0 16 16" aria-hidden="true">
+                  <path d="M3 8h10M9 4l4 4-4 4" />
+                </svg>
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Active Editorial Dialogue Stream -->
+        <div id="chatMessages" class="chat-messages hidden"></div>
+
+        <!-- Integrated Floating Input Pod -->
+        <div id="chatComposerWrap" class="chat-composer-wrap hidden">
+          <div id="learnedQuickPromptBar" class="quick-prompt-bar hidden">
+            <span class="quick-prompt-label" data-i18n="quickFillHint">已切至 Learned 模式，可带入待解问题：</span>
+            <button type="button" id="btnFillPendingQuestion" class="quick-fill-btn">
+              <span id="fillPendingText">带入核心问题</span>
+              <svg class="icon-svg" viewBox="0 0 16 16" aria-hidden="true">
+                <path d="M4 12L12 4M6 4h6v6" />
+              </svg>
+            </button>
+          </div>
+
+          <form id="chatForm" class="input-pod">
+            <!-- Top-right Expand/Collapse Control -->
+            <div class="pod-top-controls">
+              <button
+                type="button"
+                id="btnExpandInput"
+                class="pod-expand-btn"
+                title="展开 / 收起输入舱"
+                aria-expanded="false"
+              >
+                <svg id="iconExpand" class="icon-svg" viewBox="0 0 16 16" aria-hidden="true">
+                  <path d="M10 2h4v4M14 2L9.5 6.5M6 14H2v-4M2 14l4.5-4.5" />
+                </svg>
+                <svg id="iconCollapse" class="icon-svg hidden" viewBox="0 0 16 16" aria-hidden="true">
+                  <path d="M14 6h-4V2M10 6l4.5-4.5M2 10h4v4M6 10l-4.5 4.5" />
+                </svg>
+              </button>
+            </div>
+
+            <textarea
+              id="chatInput"
+              rows="2"
+              placeholder="回应访谈提问，或补充你的真实处境与想法…"
+            ></textarea>
+
+            <!-- Pod Footer: Bottom-left Mode Status + Bottom-right Geometric Send -->
+            <div class="pod-footer">
+              <div class="pod-status">
+                <span id="composerGeoMark" class="geo-prim geo-square" aria-hidden="true"></span>
+                <span id="composerModeTag" class="pod-mode-text">LEARN · 访谈态</span>
+              </div>
+
+              <button type="submit" id="btnSendChat" class="pod-send-btn">
+                <span data-i18n="sendBtn">发送</span>
+                <svg class="icon-svg" viewBox="0 0 16 16" aria-hidden="true">
+                  <path d="M2.5 8h11M9.5 4l4 4-4 4" />
+                </svg>
+              </button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <!-- Right Column: Suprematist Session Brief -->
+      <aside class="brief-panel">
+        <div class="brief-header">
+          <div class="brief-header-left">
+            <h2 class="brief-title">Session Brief</h2>
+            <p id="briefFilePath" class="brief-filepath">NO ACTIVE SESSION</p>
+          </div>
+          <div class="brief-stats" id="briefStats">
+            <span class="stat-item"><em data-i18n="statKnownLabel">已知</em> <b id="statKnown">0</b></span>
+            <span class="stat-item"><em data-i18n="statInfLabel">推测</em> <b id="statInferences">0</b></span>
+            <span class="stat-item"><em data-i18n="statThreadLabel">线索</em> <b id="statThreads">0</b></span>
+          </div>
+        </div>
+
+        <div id="briefBody" class="brief-body">
+          <!-- 01. Topic & Core Questions -->
+          <section class="brief-section" id="cardQuestions">
+            <div class="sec-head">
+              <div class="sec-title-group">
+                <span class="sec-num">01</span>
+                <h3 class="sec-title" data-i18n="sec1Title">主题与核心问题</h3>
+              </div>
+              <span id="badgeQuestionChanged" class="state-tag tag-ultramarine hidden" data-i18n="reframedBadge">REFRAMED</span>
+            </div>
+
+            <div class="question-stack">
+              <div class="q-block">
+                <span class="q-label" data-i18n="qTopic">探索主题</span>
+                <div id="briefTopicText" class="q-val muted">—</div>
+              </div>
+              <div class="q-block">
+                <span class="q-label" data-i18n="qEntry">入口问题</span>
+                <div id="briefEntryQuestionText" class="q-val muted">—</div>
+              </div>
+              <div class="q-block q-block-reframed">
+                <div class="q-label-row">
+                  <span class="q-label" data-i18n="qPending">重述 / 待回答核心问题</span>
+                  <button type="button" id="btnEditPendingQuestion" class="act-btn hidden" data-i18n="editBtn">编辑</button>
+                </div>
+                <div id="briefPendingQuestionText" class="q-val muted">—</div>
+              </div>
+            </div>
+          </section>
+
+          <!-- 02. Known -->
+          <section class="brief-section" id="cardKnown">
+            <div class="sec-head">
+              <div class="sec-title-group">
+                <span class="sec-num">02</span>
+                <h3 class="sec-title" data-i18n="sec2Title">已知</h3>
+              </div>
+              <button type="button" id="btnToggleAddKnown" class="act-btn hidden">
+                <svg class="icon-svg-sm" viewBox="0 0 12 12" aria-hidden="true">
+                  <path d="M6 2v8M2 6h8" />
+                </svg>
+                <span data-i18n="addBtn">新增</span>
+              </button>
+            </div>
+
+            <form id="formAddKnown" class="inline-add-form hidden">
+              <select id="selectKnownCategory" class="input-compact">
+                <option value="fact" data-i18n="catFact">事实/处境</option>
+                <option value="constraint" data-i18n="catConstraint">硬约束/排除</option>
+                <option value="goal" data-i18n="catGoal">目标/偏好</option>
+                <option value="opinion" data-i18n="catOpinion">用户观点</option>
+              </select>
+              <input
+                id="inputKnownContent"
+                type="text"
+                class="input-compact"
+                data-i18n-placeholder="addKnownPlaceholder"
+                placeholder="输入已知事实、硬约束或观点…"
+                required
+              />
+              <button type="submit" class="act-btn act-primary" data-i18n="saveBtn">保存</button>
+            </form>
+
+            <div id="listKnown" class="brief-list"></div>
+          </section>
+
+          <!-- 03. Inferences (No redundant subtitle) -->
+          <section class="brief-section" id="cardInferences">
+            <div class="sec-head">
+              <div class="sec-title-group">
+                <span class="sec-num">03</span>
+                <h3 class="sec-title" data-i18n="sec3Title">推测</h3>
+              </div>
+            </div>
+            <div id="listInferences" class="brief-list"></div>
+          </section>
+
+          <!-- 04. Threads to Explore (No redundant subtitle) -->
+          <section class="brief-section" id="cardThreads">
+            <div class="sec-head">
+              <div class="sec-title-group">
+                <span class="sec-num">04</span>
+                <h3 class="sec-title" data-i18n="sec4Title">待探索线索</h3>
+              </div>
+            </div>
+            <div id="listThreads" class="brief-list"></div>
+          </section>
+
+          <!-- 05. Revision Log (No redundant subtitle) -->
+          <section class="brief-section" id="cardRevisions">
+            <div class="sec-head">
+              <div class="sec-title-group">
+                <span class="sec-num">05</span>
+                <h3 class="sec-title" data-i18n="sec5Title">修正记录</h3>
+              </div>
+            </div>
+            <div id="listRevisions" class="brief-list"></div>
+          </section>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <!-- Settings Modal -->
+  <div id="modalSettings" class="modal-backdrop hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 data-i18n="settingsTitle">模型引擎配置</h3>
+        <button type="button" id="btnCloseSettings" class="btn-icon-close" aria-label="Close">
+          <svg class="icon-svg" viewBox="0 0 16 16"><path d="M3 3l10 10M13 3L3 13" /></svg>
+        </button>
+      </div>
+      <form id="formSettings" class="modal-body">
+        <div class="field-block">
+          <label data-i18n="providerSelectLabel">调用方式 / PROVIDER</label>
+          <div class="provider-options">
+            <label class="radio-card">
+              <input type="radio" name="provider" value="devin" checked />
+              <div>
+                <strong>Devin CLI</strong>
+                <p data-i18n="devinDesc">本机非交互直连 (devin -p)，免配 API Key。</p>
+              </div>
+            </label>
+            <label class="radio-card">
+              <input type="radio" name="provider" value="openai" />
+              <div>
+                <strong>OpenAI Compatible API</strong>
+                <p data-i18n="openaiDesc">兼容 OpenAI / DeepSeek / OpenRouter / Ollama 等接口。</p>
+              </div>
+            </label>
+            <label class="radio-card">
+              <input type="radio" name="provider" value="agy" />
+              <div>
+                <strong>Antigravity CLI (agy)</strong>
+                <p data-i18n="agyDesc">调用本机 agy -p 返回对话结果。</p>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <div id="sectionDevinConfig" class="provider-config-section">
+          <div class="field-block">
+            <label for="inputCliModel" data-i18n="cliModelLabel">选择模型 / MODEL</label>
+            <select id="inputCliModel">
+              <option value="" data-i18n="defaultCliModel">Default (跟随 CLI 默认配置)</option>
+              <optgroup label="Claude 5.5 / 5.1">
+                <option value="claude-opus-5-5-high">Claude Opus 5.5 (High)</option>
+                <option value="claude-opus-5-5-medium">Claude Opus 5.5 (Medium)</option>
+                <option value="claude-opus-5-5-low">Claude Opus 5.5 (Low)</option>
+                <option value="claude-opus-5-5-max">Claude Opus 5.5 (Max)</option>
+                <option value="claude-sonnet-5-5-high">Claude Sonnet 5.5 (High)</option>
+                <option value="claude-sonnet-5-5-medium">Claude Sonnet 5.5 (Medium)</option>
+                <option value="claude-sonnet-5-5-low">Claude Sonnet 5.5 (Low)</option>
+                <option value="claude-fable-5-1-high">Claude Fable 5.1 (High)</option>
+                <option value="claude-fable-5-1-medium">Claude Fable 5.1 (Medium)</option>
+              </optgroup>
+              <optgroup label="GPT-6 / GPT-5">
+                <option value="gpt-6-astra-high">GPT-6 Astra (High)</option>
+                <option value="gpt-6-astra-medium">GPT-6 Astra (Medium)</option>
+                <option value="gpt-6-astra-low">GPT-6 Astra (Low)</option>
+                <option value="gpt-6-1-sol-high">GPT-6.1 Sol (High)</option>
+                <option value="gpt-6-1-sol-medium">GPT-6.1 Sol (Medium)</option>
+                <option value="gpt-5-5-high">GPT-5.5 (High)</option>
+                <option value="gpt-5-5-medium">GPT-5.5 (Medium)</option>
+                <option value="gpt-5-4-medium">GPT-5.4 (Medium)</option>
+              </optgroup>
+              <optgroup label="Gemini 4 / 3.8">
+                <option value="gemini-4-argon-high">Gemini 4 Argon (High)</option>
+                <option value="gemini-4-argon-medium">Gemini 4 Argon (Medium)</option>
+                <option value="gemini-4-argon-low">Gemini 4 Argon (Low)</option>
+                <option value="gemini-3-8-flash-high">Gemini 3.8 Flash (High)</option>
+                <option value="gemini-3-8-flash-medium">Gemini 3.8 Flash (Medium)</option>
+              </optgroup>
+              <optgroup label="SWE / Adaptive / DeepSeek / Kimi / GLM">
+                <option value="adaptive">Adaptive</option>
+                <option value="swe-2-high">SWE-2 (High)</option>
+                <option value="swe-2-medium">SWE-2 (Medium)</option>
+                <option value="swe-2-max">SWE-2 (Max)</option>
+                <option value="deepseek-v4-pro-high">DeepSeek V4 Pro (High)</option>
+                <option value="kimi-k3-high">Kimi K3 (High)</option>
+                <option value="glm-5-3-high">GLM-5.3 (High)</option>
+              </optgroup>
+            </select>
+          </div>
+        </div>
+
+        <div id="sectionAgyConfig" class="provider-config-section hidden">
+          <div class="field-block">
+            <label for="inputAgyModel" data-i18n="agyModelLabel">选择模型 / MODEL</label>
+            <select id="inputAgyModel">
+              <option value="" data-i18n="defaultCliModel">Default (跟随 CLI 默认配置)</option>
+              <optgroup label="Gemini">
+                <option value="gemini-4-argon-high">Gemini 4 Argon (High)</option>
+                <option value="gemini-4-argon-medium">Gemini 4 Argon (Medium)</option>
+                <option value="gemini-4-argon-low">Gemini 4 Argon (Low)</option>
+                <option value="gemini-3.8-flash-high">Gemini 3.8 Flash (High)</option>
+                <option value="gemini-3.8-flash-medium">Gemini 3.8 Flash (Medium)</option>
+                <option value="gemini-3.8-flash-low">Gemini 3.8 Flash (Low)</option>
+              </optgroup>
+              <optgroup label="Claude">
+                <option value="claude-opus-5-5-high">Claude Opus 5.5 (High)</option>
+                <option value="claude-opus-5-5-medium">Claude Opus 5.5 (Medium)</option>
+                <option value="claude-opus-5-5-low">Claude Opus 5.5 (Low)</option>
+                <option value="claude-sonnet-5-5-high">Claude Sonnet 5.5 (High)</option>
+                <option value="claude-sonnet-5-5-medium">Claude Sonnet 5.5 (Medium)</option>
+                <option value="claude-sonnet-5-5-low">Claude Sonnet 5.5 (Low)</option>
+              </optgroup>
+              <optgroup label="Open Source">
+                <option value="gpt-oss-120b-medium">GPT-OSS 120B (Medium)</option>
+              </optgroup>
+            </select>
+          </div>
+        </div>
+
+        <div id="sectionOpenaiConfig" class="provider-config-section hidden">
+          <div class="field-block">
+            <label for="inputOpenaiBaseUrl">Base URL</label>
+            <input id="inputOpenaiBaseUrl" type="text" placeholder="https://api.openai.com/v1" />
+          </div>
+          <div class="field-block">
+            <label for="inputOpenaiApiKey">API Key</label>
+            <input id="inputOpenaiApiKey" type="password" placeholder="sk-..." />
+          </div>
+          <div class="field-block">
+            <label for="inputOpenaiModel" data-i18n="openaiModelLabel">选择模型 / MODEL</label>
+            <select id="inputOpenaiModel">
+              <optgroup label="OpenAI">
+                <option value="gpt-5.4">gpt-5.4</option>
+                <option value="gpt-5">gpt-5</option>
+                <option value="gpt-4o">gpt-4o</option>
+                <option value="gpt-4o-mini">gpt-4o-mini</option>
+                <option value="o3-mini">o3-mini</option>
+              </optgroup>
+              <optgroup label="DeepSeek">
+                <option value="deepseek-chat">deepseek-chat</option>
+                <option value="deepseek-reasoner">deepseek-reasoner</option>
+              </optgroup>
+              <optgroup label="Anthropic / Google (via OpenRouter / Proxy)">
+                <option value="claude-sonnet-4-6">claude-sonnet-4-6</option>
+                <option value="claude-opus-4-6">claude-opus-4-6</option>
+                <option value="gemini-2.5-pro">gemini-2.5-pro</option>
+              </optgroup>
+            </select>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" id="btnCancelSettings" class="nav-btn" data-i18n="cancelBtn">取消</button>
+          <button type="submit" class="btn-suprematist btn-sup-sm" data-i18n="saveBtn">保存</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Markdown Preview Modal -->
+  <div id="modalMarkdown" class="modal-backdrop hidden">
+    <div class="modal-card modal-lg">
+      <div class="modal-header">
+        <h3>Markdown Brief</h3>
+        <button type="button" id="btnCloseMarkdown" class="btn-icon-close" aria-label="Close">
+          <svg class="icon-svg" viewBox="0 0 16 16"><path d="M3 3l10 10M13 3L3 13" /></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre id="markdownPreviewContent" class="md-preview-box"></pre>
+        <div class="modal-footer">
+          <button type="button" id="btnCopyMarkdown" class="btn-suprematist btn-sup-sm" data-i18n="copyMdBtn">复制 Markdown</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- History Sessions Modal -->
+  <div id="modalHistory" class="modal-backdrop hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 data-i18n="historyTitle">归档会话 / ARCHIVE</h3>
+        <button type="button" id="btnCloseHistory" class="btn-icon-close" aria-label="Close">
+          <svg class="icon-svg" viewBox="0 0 16 16"><path d="M3 3l10 10M13 3L3 13" /></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-hint" data-i18n="historyHint">遵循单次 Session 严格隔离：新话题绝不自动读取旧档，仅在你主动点击时载入。</p>
+        <div id="historySessionList" class="history-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="/app.js"></script>
+</body>
+</html>

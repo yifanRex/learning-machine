@@ -1,0 +1,10 @@
+{
+  "name": "learning-machine",
+  "version": "0.1.0",
+  "description": "Learning Machine: Agent Skill (skills/learning-machine) + Split-Screen Web Workbench (workbench/)",
+  "type": "module",
+  "scripts": {
+    "start": "node workbench/server/index.mjs",
+    "dev": "node --watch workbench/server/index.mjs"
+  }
+}
